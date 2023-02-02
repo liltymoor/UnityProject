@@ -17,7 +17,7 @@ public class CalculatorExecutor : MonoBehaviour
             return;
 
         Process proc = new Process();
-        proc.StartInfo.FileName = Application.dataPath + "/Resources/C++/outDebug.exe";
+        proc.StartInfo.FileName = Application.dataPath + "/Resources/C++/calculator.exe";
         proc.StartInfo.Arguments +=
             "!" + operation.options[operation.value].text + " "                      // operation
             + value1.GetParsedText().Remove(value1.GetParsedText().Length - 1) + " " // value #1 (Removing null-terminator and passing original value)
