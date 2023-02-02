@@ -7,7 +7,6 @@ public class graph : MonoBehaviour
     List<GameObject> lineList = new List<GameObject>();
 
     private DD_DataDiagram m_DataDiagram;
-    //private RectTransform DDrect;
 
     private bool m_IsContinueInput = true;
     private float m_Input = 0f;
