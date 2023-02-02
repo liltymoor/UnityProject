@@ -7,6 +7,7 @@ public class graph : MonoBehaviour
     List<GameObject> lineList = new List<GameObject>();
 
     private DD_DataDiagram m_DataDiagram;
+    //private RectTransform DDrect;
 
     private bool m_IsContinueInput = true;
     private float m_Input = 0f;
@@ -46,8 +47,19 @@ public class graph : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+    }
+
+    private void FixedUpdate()
+    {
+
         m_Input += Time.deltaTime;
-       float f = m_Input;
+        ContinueInput(m_Input);
+    }
+
+    private void ContinueInput(float f)
+    {
+
         if (null == m_DataDiagram)
             return;
 
@@ -62,4 +74,5 @@ public class graph : MonoBehaviour
             d += 1f;
         }
     }
+
 }
