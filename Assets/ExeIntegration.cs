@@ -5,6 +5,13 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public interface IExeIntegrationOutputCaster<T>
+{
+    public abstract T OutputCast (List<string> args);
+}
+
+
 public class ExeIntegration : MonoBehaviour
 {
     private static List<string> localResults;
@@ -68,11 +75,11 @@ public class ExeIntegration : MonoBehaviour
     //
     //
 
-    static public void ExeIntegrate<T>(
+    static public void ExeIntegrate<TFinalType, TParser>(
         string                  exePath,
         string[]                args,
-        Action<T>               endFunction,
-        Func<List<string>,T>    castToTemplate)
+        Action<TFinalType>      endFunction,
+        TParser                 castObject) where TParser : IExeIntegrationOutputCaster<TFinalType>
     {
 
         //Setting up process and local properties
@@ -105,13 +112,13 @@ public class ExeIntegration : MonoBehaviour
 
         //Starting the process and waiting for an answer
         proc.Start();
-        SessionHandler<T>(proc, endFunction, castToTemplate);
+        SessionHandler<TFinalType,TParser>(proc, endFunction, castObject);
     }
 
-    private static async void SessionHandler<T>(
+    private static async void SessionHandler<TFinalType, TParser>(
         Process                 proc,
-        Action<T>               endFunction,
-        Func<List<string>,T>    castToTemplate)
+        Action<TFinalType>      endFunction,
+        TParser                 castObject) where TParser : IExeIntegrationOutputCaster<TFinalType>
     {
         //Starting the output handler
         proc.BeginOutputReadLine();
@@ -121,7 +128,7 @@ public class ExeIntegration : MonoBehaviour
             await Task.Yield();
 
         //Running passed end function and after that deleting results
-        endFunction(castToTemplate(localResults));
+        endFunction(castObject.OutputCast(localResults));
         localResults = null;
     }
 

@@ -3,21 +3,12 @@ using System.Collections.Generic;
 
 
 
-public class CalcResultObj
+public class ParseToInteger : IExeIntegrationOutputCaster<int>
 {
-    string val;
-    public CalcResultObj(string value = "")
+    public ParseToInteger() { }
+    public int OutputCast(List<string> args)
     {
-        val = value;
-    }
-
-    public string GetValue()
-    {
-        return val;
-    }
-    public static CalcResultObj ParseConsoleOutput(List<string> output)
-    {
-        return new CalcResultObj(output[0]);
+        return System.Int32.Parse(args[0]);
     }
 }
 
@@ -32,7 +23,8 @@ public class CalculatorExecutor : MonoBehaviour
 
     public void ExeCalculate()
     {
-        ExeIntegration.ExeIntegrate(
+
+        ExeIntegration.ExeIntegrate<int,ParseToInteger>(
             Application.dataPath + "/Resources/C++/calculator.exe",
             new string[]
             {
@@ -40,12 +32,11 @@ public class CalculatorExecutor : MonoBehaviour
                 value1.GetParsedText().Remove(value1.GetParsedText().Length - 1),   // left num
                 value2.GetParsedText().Remove(value2.GetParsedText().Length - 1)    // right num
             },
-            UpdateUI,
-            CalcResultObj.ParseConsoleOutput);
+            UpdateUI, new ParseToInteger());
     }
 
-    private void UpdateUI(CalcResultObj obj)
+    private void UpdateUI(int obj)
     {
-        returnObject.text = obj.GetValue();
+        returnObject.text = obj.ToString();
     }
 }
